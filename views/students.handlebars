@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <style>
+        table tr td {
+            border: 1px solid black;
+        }
+
+        table.nav tr td {
+            border: 0px solid black;
+        }
+    </style>
+    <script>
+        function validateForm(form) {
+            let keys = ["first_name", "last_name", "gender", "date_of_birth"];
+            for (let key of keys) {
+                if (form[key].value == "") {
+                    alert(key + " must be filled out");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+    </script>
+    </head>
+
+<body>
+
+    <table class="nav" width="100%">
+        <tr>
+            <td><a href='/'> Home </a></td>
+            <td><a href='/students'>Student</a></td>
+            <td><a href='/instructors'>Instructor</a></td>
+            <td><a href='/classrooms'>Classroom</a></td>
+            <td><a href='/courses'>Course</a></td>
+            <td><a href='/enrollment'>Enrollment</a></td>
+        </tr>
+    </table>
+    <hr>
+
+    <h1> Read/Delete Students By Name (use '*' to return all students):</h1>
+    <form method="POST" action="/query-student">
+        <select name="select">
+            <option value="first_name">By First Name</option>
+            <option value="last_name">By Last Name</option>
+        </select>
+        <label>Name Patten:</label>
+        <input type="text" name="pattern" />
+        <input type="submit" value="Query" />
+    </form>
+    <table>
+        <tbody>
+            <tr>
+                <td>ID</td>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Gender</td>
+                <td>Date of Birth</td>
+                <td>Action</td>
+            </tr>
+            {{#each data}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.first_name}}</td>
+                <td>{{this.last_name}}</td>
+                <td>{{this.gender}}</td>
+                <td>{{shortDateHelper this.date_of_birth "MM/DD/YYYY"}}</td>
+                <td>
+                    <form method="POST" action="/delete-student">
+                        <input type="hidden" name="id" value={{this.id}}>
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <h1>Create a new student:</h1>
+
+    <form onsubmit="return validateForm(this)" method="POST" action="/register-student">
+
+        <label>Frist Name:</label>
+
+        <input type="text" name="first_name" /><br>
+        <label>Last Name:</label>
+        <input type="text" name="last_name" /><br>
+
+        <label>Gender:</label>
+        <input type="text" name="gender" /><br>
+        <label>Date of Birth:</label>
+        <input type="date" name="date_of_birth" /><br>
+        <input type="submit" value="Create" />
+    </form>
+
+
+    <h1>Update students:</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <td>ID</td>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Gender</td>
+                <td>Date of Birth</td>
+                <td>Action</td>
+            </tr>
+            {{#each data}}
+            <tr>
+                <form onsubmit="return validateForm(this)" method="POST" action="/update-student">
+                    <td><input type=text readonly name="id" value={{this.id}}></td>
+                    <td><input type=text name="first_name" value={{this.first_name}}></td>
+                    <td><input type=text name="last_name"  value={{this.last_name}}></td>
+                    <td><input type=text name="gender" value={{this.gender}}></td>
+                    <td><input type=date name="date_of_birth" value={{shortDateHelper this.date_of_birth "YYYY-MM-DD"}}></td>
+                    <td><input type="submit" value="Update"></td>
+                </form>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+
+</body>
+
+</html>

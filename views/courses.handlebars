@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <style>
+        table tr td {
+            border: 1px solid black;
+        }
+
+        table.nav tr td {
+            border: 0px solid black;
+        }
+    </style>
+    <script>
+        function validateForm(form) {
+            let keys = ["name"];
+            for (let key of keys) {
+                if (form[key].value == "") {
+                    alert(key + " must be filled out");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <table class="nav" width="100%">
+        <tr>
+            <td><a href='/'> Home </a></td>
+            <td><a href='/students'>Student</a></td>
+            <td><a href='/instructors'>Instructor</a></td>
+            <td><a href='/classrooms'>Classroom</a></td>
+            <td><a href='/courses'>Course</a></td>
+            <td><a href='/enrollment'>Enrollment</a></td>
+        </tr>
+    </table>
+    <hr>
+
+    <h1> Read/Delete Courses:</h1>
+    <table>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Current Term Offered</td>
+                <td>Capacity</td>
+                <td>Instructor First Name</td>
+                <td>Instructor Last Name</td>
+                <td>Classroom</td>
+                <td>Action</td>
+            </tr>
+            {{#each course_data}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.current_term_offered}}</td>
+                <td>{{this.capacity}}</td>
+                <td>{{this.first_name}}</td>
+                <td>{{this.last_name}}</td>
+                <td>{{this.classroom}}</td>
+                <td>
+                    <form method="POST" action="/delete-course">
+                        <input type="hidden" name="id" value={{this.id}}>
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <h1>Create a new course:</h1>
+
+    <form onsubmit="return validateForm(this)" method="POST" action="/register-course">
+
+        <label>Name:</label>
+
+        <input type="text" name="name" /><br>
+
+        <input type="checkbox" name="current_term_offered" />
+        <label>Current Term Offered</label><br>
+
+
+        <label>Capacity:</label>
+        <input type="number" name="capacity" value="50" min="1"><br>
+        <label>Choose an instructor:</label>
+        <select name="instructor_id">
+            <option value="null">null</option>
+            {{#each instructor_data}}
+            <option value="{{this.instructor_id}}">{{this.instructor_id}}: {{this.first_name}} {{this.last_name}}
+            </option>
+            {{/each}}
+        </select><br>
+        <label>Choose a classroom:</label>
+        <select name="classroom_id">
+            <option value="null">null</option>
+            {{#each classroom_data}}
+            <option value="{{this.classroom_id}}">{{this.classroom_id}}: {{this.classroom}}</option>
+            {{/each}}
+        </select><br>
+
+        <input type="submit" value="Create" />
+    </form>
+
+    <h1>Update courses:</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Current Term Offered</td>
+                <td>Capacity</td>
+                <td>Instructor</td>
+                <td>Classroom</td>
+                <td>Action</td>
+            </tr>
+            {{#each course_data as |course|}}
+
+                <form onsubmit="return validateForm(this)" method="POST" action="/update-course">
+
+                    <td><input type=text readonly name="id" value={{this.id}}></td>
+                    <td><input type=text name="name" value={{this.name}}></td>
+                    <td><input type="checkbox" name="current_term_offered" {{#if this.current_term_offered}}checked{{/if}}></td>
+                    <td><input type=number name="capacity" value={{this.capacity}} min="1"></td>
+                    </td>
+
+                    <td><select name="instructor_id">
+                            <option value="null">null</option>
+                            {{#each ../instructor_data}}
+                            <option value="{{this.instructor_id}}" {{#ifCond course.instructor_id this.instructor_id}} selected {{/ifCond}}>{{this.instructor_id}}: {{this.first_name}}
+                                {{this.last_name}} 
+                            </option>
+                            {{/each}}
+                        </select></td>
+                    <td>
+                        <select name="classroom_id">
+                            <option value="null">null</option>
+                            {{#each ../classroom_data}}
+                            <option value="{{this.classroom_id}}" {{#ifCond course.classroom_id this.classroom_id}} selected {{/ifCond}}>{{this.classroom_id}}: {{this.classroom}}</option>
+                            {{/each}}
+                        </select></td>
+
+                    <td><input type="submit" value="Update"></td>
+                </form>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+
+</html>

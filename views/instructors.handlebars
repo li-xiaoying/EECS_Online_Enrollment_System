@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <style>
+        table tr td {
+            border: 1px solid black;
+        }
+
+        table.nav tr td {
+            border: 0px solid black;
+        }
+    </style>
+     <script>
+        function validateForm(form) {
+            let keys = ["first_name", "last_name", "gender", "date_of_birth"];
+            for (let key of keys) {
+                if (form[key].value == "") {
+                    alert(key + " must be filled out");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <table class="nav" width="100%">
+        <tr>
+            <td><a href='/'> Home </a></td>
+            <td><a href='/students'>Student</a></td>
+            <td><a href='/instructors'>Instructor</a></td>
+            <td><a href='/classrooms'>Classroom</a></td>
+            <td><a href='/courses'>Course</a></td>
+            <td><a href='/enrollment'>Enrollment</a></td>
+        </tr>
+    </table>
+    <hr>
+
+    <h1> Read/Delete Instructors:</h1>
+    <table>
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Gender</td>
+                <td>Date of Birth</td>
+                <td>Action</td>
+            </tr>
+            {{#each data}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.first_name}}</td>
+                <td>{{this.last_name}}</td>
+                <td>{{this.gender}}</td>
+                <td>{{shortDateHelper this.date_of_birth "MM/DD/YYYY"}}</td>
+                <td>
+                    <form method="POST" action="/delete-instructor">
+                        <input type="hidden" name="id" value={{this.id}}>
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <h1>Create a new Instructor:</h1>
+
+    <form onsubmit="return validateForm(this)" method="POST" action="/register-instructor">
+
+        <label>Frist Name:</label>
+
+        <input type="text" name="first_name" /><br>
+        <label>Last Name:</label>
+        <input type="text" name="last_name" /><br>
+
+
+          <label>Gender:</label>
+        <input type="text" name="gender" /><br>
+        <label>Date of Birth:</label>
+        <input type="date" name="date_of_birth" /><br>
+        <input type="submit" value="Create" />
+    </form>
+
+</body>
+
+</html>

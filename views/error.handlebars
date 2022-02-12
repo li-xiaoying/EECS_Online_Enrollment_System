@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <style>
+        table tr td {
+            border: 1px solid black;
+        }
+
+        table.nav tr td {
+            border: 0px solid black;
+        }
+    </style>
+   
+    </head>
+
+<body>
+
+    <table class="nav" width="100%">
+        <tr>
+            <td><a href='/'> Home </a></td>
+            <td><a href='/students'>Student</a></td>
+            <td><a href='/instructors'>Instructor</a></td>
+            <td><a href='/classrooms'>Classroom</a></td>
+            <td><a href='/courses'>Course</a></td>
+            <td><a href='/enrollment'>Enrollment</a></td>
+        </tr>
+    </table>
+    <hr>
+{{#if error}}
+    <h1>{{error}}</h1>
+{{/if}}
+</body>
+</html>

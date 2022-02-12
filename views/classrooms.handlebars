@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <style>
+        table tr td {
+            border: 1px solid black;
+        }
+
+        table.nav tr td {
+            border: 0px solid black;
+        }
+    </style>
+        <script>
+        function validateForm(form) {
+            let keys = ["building", "capacity", "floor", "type"];
+            for (let key of keys) {
+                if (form[key].value == "") {
+                    alert(key + " must be filled out");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <table class="nav" width="100%">
+        <tr>
+            <td><a href='/'> Home </a></td>
+            <td><a href='/students'>Student</a></td>
+            <td><a href='/instructors'>Instructor</a></td>
+            <td><a href='/classrooms'>Classroom</a></td>
+            <td><a href='/courses'>Course</a></td>
+            <td><a href='/enrollment'>Enrollment</a></td>
+        </tr>
+    </table>
+    <hr>
+    <h1> Read/Delete Classrooms:</h1>
+    <table>
+        <tbody>
+            <tr>
+                <td>ID</td>
+                <td>Building</td>
+                <td>Capacity</td>
+                <td>Floor</td>
+                <td>Type</td>
+                <td>Action</td>
+            </tr>
+            {{#each data}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.building}}</td>
+                <td>{{this.capacity}}</td>
+                <td>{{this.floor}}</td>
+                <td>{{this.type}}</td>
+                 <td>
+                    <form method="POST" action="/delete-classroom">
+                        <input type="hidden" name="id" value={{this.id}}>
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <h1>Create a new Classroom:</h1>
+
+    <form onsubmit="return validateForm(this)" method="POST" action="/register-classroom">
+
+        <label>Building:</label>
+
+        <input type="text" name="building" /><br>
+        <label>Capacity:</label>
+        <input type="number" name="capacity" min="1"/><br>
+        <label>Floor:</label>
+        <input type="number" name="floor" min="1"/><br>
+        <label>Type:</label>
+        <input type="Text" name="type" /><br>
+
+        <input type="submit" value="Create" />
+    </form>
+
+</body>
+
+</html>
